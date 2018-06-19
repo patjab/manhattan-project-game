@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  challenger_id: one
+  challenged_id: one
+  accepted: false
+  current_turn_nation_id: 1
+
+two:
+  challenger_id: two
+  challenged_id: two
+  accepted: false
+  current_turn_nation_id: 1
