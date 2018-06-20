@@ -1,9 +1,9 @@
 <h1><%= @match.challenger.nation_name %> versus <%= @match.challenged.nation_name %></h1><br/>
 
 Current Question asked by the <%= @random_q.person.name %>:<br/>
-<%= @random_q.question %><br/>
-<%= @random_q.option_a %><br/>
-<%= @random_q.option_b %><br/>
-<%= @random_q.option_c %><br/>
-<%= @random_q.option_d %><br/>
-<%= @random_q.answer %><br/>
+<%= link_to @random_q.question, wrong_answer_path %><br/>
+<%= link_to @random_q.option_a, wrong_answer_path %><br/>
+<%= link_to @random_q.option_b, wrong_answer_path %><br/>
+<%= link_to @random_q.option_c, wrong_answer_path %><br/>
+<%= link_to @random_q.option_d, wrong_answer_path %><br/>
+<%= link_to @random_q.answer, correct_answer_path %><br/>
