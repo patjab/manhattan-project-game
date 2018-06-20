@@ -1,0 +1,10 @@
+<h1>Create A New Nation</h1>
+<%= form_for @nation do |f| %>
+<%= f.label :nation_name %><br/>
+<%= f.text_field :nation_name %><br/>
+<%= f.label :password %><br/>
+<%= f.password_field :password %><br/>
+<%= f.label :password_confirmation %><br/>
+<%= f.password_field :password_confirmation %><br/>
+<%= f.submit %><br/>
+<% end %>

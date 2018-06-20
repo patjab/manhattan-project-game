@@ -1,4 +1,6 @@
 class Nation < ApplicationRecord
+  has_secure_password
+  
   has_many :matches
   # has_many :challengers, class_name: 'Nation', through: :matches, foreign_key: 'challenger_id'
   # has_many :challengeds, class_name: 'Nation', through: :matches, foreign_key: 'challenged_id'
@@ -14,4 +16,7 @@ class Nation < ApplicationRecord
   has_many :nation_questions
   has_many :questions, through: :nation_questions
   has_many :people, through: :questions
+
+
+
 end

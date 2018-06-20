@@ -1,0 +1,9 @@
+<h1>Log In</h1>
+<%= form_tag controller: 'sessions', action: 'create', method: 'post' do %>
+  <%= label_tag :nation_name %><br/>
+  <%= text_field_tag :nation_name %><br/>
+  <%= label_tag :password %><br/>
+  <%= password_field_tag :password %><br/>
+  <%= submit_tag 'Login' %><br/>
+<% end %><br/>
+No nation? <%= link_to 'Sign up', signup_path %>
