@@ -8,4 +8,8 @@ class Match < ApplicationRecord
     self.current_turn_nation_id = nations[rand(0..1)].id
     self.save
   end
+
+  def the_other_nation(nation)
+    self.challenger == nation ? self.challenged : self.challenger
+  end
 end

@@ -32,10 +32,21 @@ class MatchesController < ApplicationController
     end
   end
 
+  # This method switch the current nations in the current_turn_nation_id
+  # spot as well as reset the question
   def wrong
+    # params[:format] will take in whatever is passed into the path
+    @match = Match.find(params[:format])
+    @match.current_turn_nation_id = @match.the_other_nation(current_nation).id
+    @match.current_question_id = nil
+    @match.save
+    render :'wait.html'
   end
 
   def correct
+    # Person will now be associated with the user through a question
+    # along with following the same procedures for step change coded in
+    # #wrong
   end
 
   def create
