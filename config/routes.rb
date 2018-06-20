@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'static/rules'
   root 'matches#index'
 
   resources :matches, only: [:index, :show, :new, :create]

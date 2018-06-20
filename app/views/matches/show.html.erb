@@ -11,13 +11,15 @@
 <h2>Wrong Answers Strikes</h2><br/>
 <%= @match.challenger.user_name %>: <%= @match.challenger_strikes %><br/>
 <%= @match.challenged.user_name %>: <%= @match.challenged_strikes %><br/><br/>
+<h2>Abilities:</h2><br/>
 <% if @espionage %>
-<%= button_tag "Espionage", disabled: true %>
+<%= submit_tag 'Espionage' %>
 <% else %>
-<%= button_tag "Espionage", disabled: false %>
+<%= submit_tag 'Espionage', disabled: true %>
 <% end %>
 <br/><br/>
 <h2>Question:</h2><br/>
+<% if current_user.id == @match.current_turn_user_id %>
 Current Question asked by the <%= @random_q.person.name %>:<br/>
 <%= @random_q.question %><br/>
 <%= link_to @random_q.option_a, wrong_answer_path(@match), method: :post %><br/>
@@ -25,3 +27,7 @@ Current Question asked by the <%= @random_q.person.name %>:<br/>
 <%= link_to @random_q.option_c, wrong_answer_path(@match), method: :post %><br/>
 <%= link_to @random_q.option_d, wrong_answer_path(@match), method: :post %><br/>
 <%= link_to @random_q.answer, correct_answer_path(@match), method: :post %><br/>
+<% else %>
+Wait for your opponent.<br/><br/><br/>
+<%= link_to "Refresh", show_match_path(@match.id) %>
+<% end %>

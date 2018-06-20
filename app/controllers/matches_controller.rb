@@ -17,25 +17,16 @@ class MatchesController < ApplicationController
     @match = Match.find(params[:id])
     # If it is their turn
 
-    @espionage = false
-    if (@match.is_challenger?(current_user) && @match.challenged_strikes > 2) || (@match.is_challenged?(current_user) && @match.challenger_strikes > 2)
-      @espionage = true
-    end
+    @espionage = espionage_ability?(@match, current_user)
 
-    if current_user == User.find(@match.current_turn_user_id)
-      # Generate a random question if none exists
-      if @match.current_question_id.nil?
-        @random_q = Question.random_question(current_user)
-        @match.current_question_id = @random_q.id
-        @match.save
-      # Or keep the one that does
-      else
-        @random_q = Question.find(@match.current_question_id)
-      end
-      render :'show.html'
-    # If it is not their turn
+    # Generate a random question if none exists
+    if @match.current_question_id.nil?
+      @random_q = Question.random_question(current_user)
+      @match.current_question_id = @random_q.id
+      @match.save
+    # Or keep the one that does
     else
-      render :'wait.html'
+      @random_q = Question.find(@match.current_question_id)
     end
   end
 
@@ -44,13 +35,14 @@ class MatchesController < ApplicationController
   def wrong
     # params[:format] will take in whatever is passed into the path
     @match = Match.find(params[:format])
+    @espionage = espionage_ability?(@match, current_user)
     @match.current_turn_user_id = @match.the_other_user(current_user).id
     @match.current_question_id = nil
     @match.is_challenger?(current_user) ? (@match.challenger_strikes += 1) : (@match.challenged_strikes += 1)
     @match.save
 
     @team = team_count(current_user)
-    render :'wait.html'
+    render :'show.html'
   end
 
   def correct
@@ -58,6 +50,7 @@ class MatchesController < ApplicationController
     # along with following the same procedures for step change coded in
     # #wrong
     @match = Match.find(params[:format])
+    @espionage = espionage_ability?(@match, current_user)
 
     uq = UserQuestion.new
     uq.question = Question.find(@match.current_question_id)
@@ -70,7 +63,7 @@ class MatchesController < ApplicationController
     @match.save
 
     @team = team_count(current_user)
-    render :'wait.html'
+    render :'show.html'
   end
 
   def create
@@ -96,5 +89,9 @@ class MatchesController < ApplicationController
     team["chemist"] = current_user.people.where(name: "Chemist").count
     team["politician"] = current_user.people.where(name: "Politician").count
     team
+  end
+
+  def espionage_ability?(match, current_user)
+    (match.is_challenger?(current_user) && match.challenged_strikes > 2) || (match.is_challenged?(current_user) && match.challenger_strikes > 2)
   end
 end
