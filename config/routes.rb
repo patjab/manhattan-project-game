@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root 'sessions#new'
+  root 'matches#index'
 
   resources :matches, only: [:index, :show, :new, :create]
 
@@ -18,5 +18,6 @@ Rails.application.routes.draw do
   post 'login', to: 'sessions#create', as: 'session'
   delete 'logout', to: 'sessions#destroy', as: 'logout'
 
+  get 'rules', to: 'static#rules', as: 'rules'
 
 end

@@ -6,8 +6,17 @@
 <%= @team["physicist"] %> Physicist<br/>
 <%= @team["chemist"] %> Chemist<br/>
 <%= @team["mathematician"] %> Mathematician<br/>
-<%= @team["politician"] %> Politician<br/>
+<%= @team["politician"] %> Politician
+<br/><br/>
+<h2>Wrong Answers Strikes</h2><br/>
+<%= @match.challenger.user_name %>: <%= @match.challenger_strikes %><br/>
+<%= @match.challenged.user_name %>: <%= @match.challenged_strikes %><br/><br/>
+<% if @espionage %>
+<%= button_tag "Espionage", :disabled => false %>
+<% else %>
+<%= button_tag "Espionage", :disabled => true %>
+<% end %>
 <br/><br/>
 <h2>Question:</h2><br/>
-<h2>Wait for your opponent.</h2>
+Wait for your opponent.<br/><br/><br/>
 <%= link_to "Refresh", show_match_path(@match.id) %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_20_141151) do
+ActiveRecord::Schema.define(version: 2018_06_20_191946) do
 
   create_table "matches", force: :cascade do |t|
     t.integer "challenger_id"
@@ -20,6 +20,8 @@ ActiveRecord::Schema.define(version: 2018_06_20_141151) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "current_question_id"
+    t.integer "challenger_strikes", default: 0
+    t.integer "challenged_strikes", default: 0
   end
 
   create_table "people", force: :cascade do |t|

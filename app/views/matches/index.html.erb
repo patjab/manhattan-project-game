@@ -1,13 +1,10 @@
 <h1>Mission Control<br/>
   <%= current_user.user_name %> | <%= current_user.nation_name %></h1>
-<h2>Ongoing Matches</h2>
+<h2>Your Ongoing Races</h2>
 <% @challengeds.each do |user| %>
 <%= link_to user.user_name, match_path(Match.find_by(challenger: current_user, challenged: user)) %><br/>
 <% end %>
 <% @challengers.each do |user| %>
 <%= link_to user.user_name, match_path(Match.find_by(challenger: user, challenged: current_user)) %><br/>
 <% end %>
-<h2><%= link_to 'Initiate Match', '/matches/new' %><h2><br/>
-<% @potential_match_users.each do |user| %>
-<%= user.user_name %><br/>
-<% end %>
+<h2><%= link_to 'Challenge a Nation', '/matches/new' %><h2><br/>

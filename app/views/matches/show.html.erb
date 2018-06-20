@@ -6,7 +6,16 @@
 <%= @team["physicist"] %> Physicist<br/>
 <%= @team["chemist"] %> Chemist<br/>
 <%= @team["mathematician"] %> Mathematician<br/>
-<%= @team["politician"] %> Politician<br/>
+<%= @team["politician"] %> Politician
+<br/><br/>
+<h2>Wrong Answers Strikes</h2><br/>
+<%= @match.challenger.user_name %>: <%= @match.challenger_strikes %><br/>
+<%= @match.challenged.user_name %>: <%= @match.challenged_strikes %><br/><br/>
+<% if @espionage %>
+<%= button_tag "Espionage", disabled: true %>
+<% else %>
+<%= button_tag "Espionage", disabled: false %>
+<% end %>
 <br/><br/>
 <h2>Question:</h2><br/>
 Current Question asked by the <%= @random_q.person.name %>:<br/>

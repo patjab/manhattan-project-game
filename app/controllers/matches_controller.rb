@@ -16,6 +16,12 @@ class MatchesController < ApplicationController
     @team = team_count(current_user)
     @match = Match.find(params[:id])
     # If it is their turn
+
+    @espionage = false
+    if (@match.is_challenger?(current_user) && @match.challenged_strikes > 2) || (@match.is_challenged?(current_user) && @match.challenger_strikes > 2)
+      @espionage = true
+    end
+
     if current_user == User.find(@match.current_turn_user_id)
       # Generate a random question if none exists
       if @match.current_question_id.nil?
@@ -40,7 +46,9 @@ class MatchesController < ApplicationController
     @match = Match.find(params[:format])
     @match.current_turn_user_id = @match.the_other_user(current_user).id
     @match.current_question_id = nil
+    @match.is_challenger?(current_user) ? (@match.challenger_strikes += 1) : (@match.challenged_strikes += 1)
     @match.save
+
     @team = team_count(current_user)
     render :'wait.html'
   end
@@ -58,7 +66,9 @@ class MatchesController < ApplicationController
 
     @match.current_turn_user_id = @match.the_other_user(current_user).id
     @match.current_question_id = nil
+    @match.is_challenger?(current_user) ? (@match.challenger_strikes = 0) : (@match.challenged_strikes = 0)
     @match.save
+
     @team = team_count(current_user)
     render :'wait.html'
   end
@@ -87,5 +97,4 @@ class MatchesController < ApplicationController
     team["politician"] = current_user.people.where(name: "Politician").count
     team
   end
-
 end

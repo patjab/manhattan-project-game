@@ -12,4 +12,12 @@ class Match < ApplicationRecord
   def the_other_user(user)
     self.challenger == user ? self.challenged : self.challenger
   end
+
+  def is_challenger?(user)
+    user == self.challenger
+  end
+
+  def is_challenged?(user)
+    user == self.challenged
+  end
 end
