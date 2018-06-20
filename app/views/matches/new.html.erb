@@ -1,7 +1,7 @@
 <h1>Initiate a Match</h1><br/>
 <%= form_for @match do |f| %>
 <%= f.label :challenger %><br/>
-<%= current_nation.nation_name %><br/><br/>
+<%= current_user.user_name %><br/><br/>
 <%= f.label :challenged, 'Challenges' %><br/>
 <%= f.text_field :challenged %><br/>
 <%= f.submit 'Challenge' %><br/>

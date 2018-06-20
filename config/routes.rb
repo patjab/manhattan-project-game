@@ -3,15 +3,16 @@ Rails.application.routes.draw do
 
   resources :matches, only: [:index, :show, :new, :create]
 
-  get 'signup', to: 'nations#new', as: 'signup'
-  get 'nations/', to: 'nation#new', as: 'nations'
+  get 'signup', to: 'users#new', as: 'signup'
+  get 'users/', to: 'user#new', as: 'users'
 
-  get 'nations/:id', to: 'nations#show', as: 'nation'
+  get 'users/:id', to: 'users#show', as: 'user'
 
-  post 'nations/', to: 'nations#create'
+  post 'users/', to: 'users#create'
 
   post 'wrong', to: 'matches#wrong', as: 'wrong_answer'
   post 'correct', to: 'matches#correct', as: 'correct_answer'
+  get 'match/:id', to: 'matches#show', as: 'show_match'
 
   get 'login', to: 'sessions#new', as: 'login'
   post 'login', to: 'sessions#create', as: 'session'

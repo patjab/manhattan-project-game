@@ -1,2 +1,13 @@
-<h1><%= @match.challenger.nation_name %> versus <%= @match.challenged.nation_name %></h1><br/>
-<h2>Wait for your opponent nation.</h2>
+<h1><%= @match.challenger.user_name %>'s <%= @match.challenger.nation_name %><br/>
+  vs.<br/>
+<%= @match.challenged.user_name %>'s <%= @match.challenged.nation_name %></h1>
+<br/><br/>
+<h2>Your Team:</h2><br/>
+<%= @team["physicist"] %> Physicist<br/>
+<%= @team["chemist"] %> Chemist<br/>
+<%= @team["mathematician"] %> Mathematician<br/>
+<%= @team["politician"] %> Politician<br/>
+<br/><br/>
+<h2>Question:</h2><br/>
+<h2>Wait for your opponent.</h2>
+<%= link_to "Refresh", show_match_path(@match.id) %>

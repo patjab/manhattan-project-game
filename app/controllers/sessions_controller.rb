@@ -1,22 +1,22 @@
 class SessionsController < ApplicationController
   def new
     if logged_in?
-      redirect_to match_path(current_nation)
+      redirect_to match_path(current_user)
     end
   end
 
   def create
-    @nation = Nation.find_by(nation_name: params[:nation_name])
-    if !@nation.nil? && @nation.authenticate(params[:password])
-      session[:nation_id] = @nation.id
-      redirect_to matches_path(@nation)
+    @user = User.find_by(user_name: params[:user_name])
+    if !@user.nil? && @user.authenticate(params[:password])
+      session[:user_id] = @user.id
+      redirect_to matches_path(@user)
     else
       redirect_to login_path
     end
   end
 
   def destroy
-    session.delete(:nation_id)
+    session.delete(:user_id)
     redirect_to login_path
   end
 end

@@ -78,6 +78,3 @@ history.each {|question| politician.questions << question}
 #
 # patrick = Nation.find(1)
 # steven = Nation.find(2)
-
-Nation.create(nation_name: "Patrickland")
-Nation.create(nation_name: "Stevenland")

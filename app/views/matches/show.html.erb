@@ -1,5 +1,14 @@
-<h1><%= @match.challenger.nation_name %> versus <%= @match.challenged.nation_name %></h1><br/>
-
+<h1><%= @match.challenger.user_name %>'s <%= @match.challenger.nation_name %><br/>
+  vs.<br/>
+<%= @match.challenged.user_name %>'s <%= @match.challenged.nation_name %></h1>
+<br/><br/>
+<h2>Your Team:</h2><br/>
+<%= @team["physicist"] %> Physicist<br/>
+<%= @team["chemist"] %> Chemist<br/>
+<%= @team["mathematician"] %> Mathematician<br/>
+<%= @team["politician"] %> Politician<br/>
+<br/><br/>
+<h2>Question:</h2><br/>
 Current Question asked by the <%= @random_q.person.name %>:<br/>
 <%= @random_q.question %><br/>
 <%= link_to @random_q.option_a, wrong_answer_path(@match), method: :post %><br/>

@@ -1,10 +1,10 @@
 class ApplicationController < ActionController::Base
-  helper_method :logged_in?, :current_nation
+  helper_method :logged_in?, :current_user
   before_action :logged_in?
 
-  def current_nation
-    if session[:nation_id]
-      @nation = Nation.find(session[:nation_id])
+  def current_user
+    if session[:user_id]
+      @user = User.find(session[:user_id])
     end
   end
 
@@ -13,6 +13,6 @@ class ApplicationController < ActionController::Base
   end
 
   def logged_in?
-    !!current_nation
+    !!current_user
   end
 end

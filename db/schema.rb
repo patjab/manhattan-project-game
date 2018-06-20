@@ -16,24 +16,10 @@ ActiveRecord::Schema.define(version: 2018_06_20_141151) do
     t.integer "challenger_id"
     t.integer "challenged_id"
     t.boolean "accepted"
-    t.integer "current_turn_nation_id"
+    t.integer "current_turn_user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "current_question_id"
-  end
-
-  create_table "nation_questions", force: :cascade do |t|
-    t.integer "question_id"
-    t.integer "nation_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "nations", force: :cascade do |t|
-    t.string "nation_name"
-    t.string "password_digest"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "people", force: :cascade do |t|
@@ -50,6 +36,21 @@ ActiveRecord::Schema.define(version: 2018_06_20_141151) do
     t.string "option_d"
     t.string "answer"
     t.integer "person_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "user_questions", force: :cascade do |t|
+    t.integer "question_id"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "user_name"
+    t.string "nation_name"
+    t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

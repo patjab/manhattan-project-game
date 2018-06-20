@@ -4,7 +4,7 @@ class CreateMatches < ActiveRecord::Migration[5.2]
       t.integer :challenger_id
       t.integer :challenged_id
       t.boolean :accepted
-      t.integer :current_turn_nation_id
+      t.integer :current_turn_user_id
 
       t.timestamps
     end
