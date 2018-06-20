@@ -3,6 +3,10 @@ class NationsController < ApplicationController
     @nation = Nation.new
   end
 
+  def index
+    @nations = Nation.all
+  end
+
   def create
     @nation = Nation.new(nation_params)
     if @nation.valid?

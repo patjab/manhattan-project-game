@@ -1,0 +1,13 @@
+<h1>Mission Control for <%= current_nation.nation_name %></h1>
+<h2>Ongoing Matches</h2>
+<% @challengeds.each do |nation| %>
+<%= link_to nation.nation_name, match_path(Match.find_by(challenger: current_nation, challenged: nation)) %><br/>
+<% end %>
+<% @challengers.each do |nation| %>
+<%= link_to nation.nation_name, match_path(Match.find_by(challenger: nation, challenged: current_nation)) %><br/>
+<% end %>
+<h2>Potential Targets</h2>
+<%= link_to 'Initiate Match', '/matches/new' %><br/>
+<% @potential_match_nations.each do |nation| %>
+<%= nation.nation_name %><br/>
+<% end %>
