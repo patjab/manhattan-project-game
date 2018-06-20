@@ -19,8 +19,6 @@ ActiveRecord::Schema.define(version: 2018_06_19_173417) do
     t.integer "current_turn_nation_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["challenged_id"], name: "index_matches_on_challenged_id"
-    t.index ["challenger_id"], name: "index_matches_on_challenger_id"
   end
 
   create_table "nation_questions", force: :cascade do |t|
@@ -28,8 +26,6 @@ ActiveRecord::Schema.define(version: 2018_06_19_173417) do
     t.integer "nation_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["nation_id"], name: "index_nation_questions_on_nation_id"
-    t.index ["question_id"], name: "index_nation_questions_on_question_id"
   end
 
   create_table "nations", force: :cascade do |t|
@@ -55,7 +51,6 @@ ActiveRecord::Schema.define(version: 2018_06_19_173417) do
     t.integer "person_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["person_id"], name: "index_questions_on_person_id"
   end
 
 end

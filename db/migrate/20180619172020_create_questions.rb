@@ -7,7 +7,7 @@ class CreateQuestions < ActiveRecord::Migration[5.2]
       t.string :option_c
       t.string :option_d
       t.string :answer
-      t.belongs_to :person, foreign_key: true
+      t.integer :person_id
 
       t.timestamps
     end
