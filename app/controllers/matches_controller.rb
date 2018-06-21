@@ -53,6 +53,12 @@ class MatchesController < ApplicationController
     end
   end
 
+  def destroy
+    @match = Match.find(params[:id])
+    @match.destroy
+    redirect_to matches_path(current_user)
+  end
+
   private
   def team_count(current_user, match)
     team = Hash.new
