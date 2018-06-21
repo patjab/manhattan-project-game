@@ -3,6 +3,7 @@ class MatchesController < ApplicationController
 
   def new
     @match = Match.new
+    @potential_match_users = (User.all - current_user.challengeds - current_user.challengers - [current_user])
   end
 
   def index

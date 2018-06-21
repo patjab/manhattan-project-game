@@ -1,8 +1,23 @@
-<h1>Initiate a Match</h1><br/>
+<h1>Initiate a Match</h1>
+
+<h2>Challenge A Known User</h2>
 <%= form_for @match do |f| %>
-<%= f.label :challenger %><br/>
+<b><%= f.label :challenger %></b><br/>
 <%= current_user.user_name %><br/><br/>
-<%= f.label :challenged, 'Challenges' %><br/>
+<b><%= f.label :challenged, 'Challenges (username)' %></b><br/>
 <%= f.text_field :challenged %><br/>
 <%= f.submit 'Challenge' %><br/>
+<% end %>
+<br/>
+
+<h2>Nations Waiting for a Challenge</h2>
+<% if @potential_match_users.count < 1 %>
+Sorry, all nations are busy at the moment. Please try again later.<br/>
+<% else %>
+<% @potential_match_users.each do |user| %>
+  <%= form_for @match do |f| %>
+    <%= f.hidden_field :challenged, :value => user.user_name %><br/>
+    <%= f.submit "Challenge #{user.user_name}" %><br/>
+  <% end %>
+<% end %>
 <% end %>
