@@ -1,4 +1,7 @@
 <h1>Rankings</h1>
+<table border>
+  <tr><td>Username</td><td>Nation</td><td>People</td></tr>
 <% @users.each do |user| %>
-<%= user.user_name %><br/>
+<tr><td><%= user.user_name %></td><td><%= user.nation_name %></td><td><%= user.people.count %></td></tr>
 <% end %>
+</table>
