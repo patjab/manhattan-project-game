@@ -1,10 +1,6 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+UserQuestion.destroy_all
+User.destroy_all
+Match.destroy_all
 
 Person.destroy_all
 mathematician = Person.create(name: "Mathematician")
@@ -12,7 +8,6 @@ physicist = Person.create(name: "Physicist")
 chemist = Person.create(name: "Chemist")
 politician = Person.create(name: "Politician")
 
-#INSERT QUESTION SEED DATA HERE
 Question.destroy_all
 
 math = [Question.create(question: "What is Pythagorean Theorem?", option_a: "Wrong Answer 1", option_b: "Wrong Answer 2", option_c: "Wrong Answer 3", option_d: "Wrong Answer 4", answer: "Right Answer"),
@@ -69,12 +64,3 @@ math.each {|question| mathematician.questions << question}
 physics.each {|question| physicist.questions << question}
 chemistry.each {|question| chemist.questions << question}
 history.each {|question| politician.questions << question}
-
-# FOR REFERENCE ONLY
-# mathematician = Person.find(1)
-# physicist = Person.find(2)
-# chemist = Person.find(3)
-# politician = Person.find(4)
-#
-# patrick = Nation.find(1)
-# steven = Nation.find(2)
