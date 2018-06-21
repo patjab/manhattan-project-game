@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   resources :matches, only: [:index, :new, :create]
 
   get 'signup', to: 'users#new', as: 'signup'
-  get 'users/', to: 'user#new', as: 'users'
+  get 'users/', to: 'users#index', as: 'users'
   get 'users/:id', to: 'users#show', as: 'user'
   post 'users/', to: 'users#create'
 
