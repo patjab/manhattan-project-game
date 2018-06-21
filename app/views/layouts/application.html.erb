@@ -12,12 +12,15 @@
   <body>
     <h4>
       <% if logged_in? %>
-      Logged in as <%= current_user.user_name %> | Nation: <%= current_user.nation_name %> | <%= link_to "Rules", rules_path %>
-      [<%= link_to "Logout", {:controller => :sessions, :action => 'destroy' }, :method => :delete %>]<br/><br/>
-      <%= link_to "Mission Control", matches_path %>
+      Logged in as <%= current_user.user_name %> [<%= link_to "Logout", {:controller => :sessions, :action => 'destroy' }, :method => :delete %>] |
+      Nation: <%= current_user.nation_name %> |
+      <%= link_to "Mission Control", matches_path %> |
+      <%= link_to "Rename Nation", edit_user_path(current_user) %> |
       <% else %>
-      <%= link_to "Rules", rules_path %> [<%= link_to 'Login', login_path %>]
+      <%= link_to 'Login', login_path %> |
       <% end %>
+      <%= link_to "Rules", rules_path %> |
+      <%= link_to "Rankings", users_path %>
     </h4>
     <center><%= yield %></center>
   </body>

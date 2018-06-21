@@ -1,0 +1,8 @@
+<h1>Change the Nation Name</h1>
+<%= form_for @user do |f| %>
+<b><%= f.label :user_name %></b><br/>
+<%= @user.user_name %><br/><br/>
+<b><%= f.label :nation_name %></b><br/>
+<%= f.text_field :nation_name %><br/><br/>
+<%= f.submit %><br/>
+<% end %>
