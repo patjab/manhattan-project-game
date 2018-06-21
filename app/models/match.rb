@@ -23,4 +23,13 @@ class Match < ApplicationRecord
   def is_challenged?(user)
     user == self.challenged
   end
+
+  # def team_count(current_user)
+  #   team = Hash.new
+  #   team["mathematician"] = current_user.user_questions.where(match_id: self.id).select {|uq| uq.question.person.name == "Mathematician"}.count
+  #   team["physicist"] = current_user.user_questions.where(match_id: self.id).select {|uq| uq.question.person.name == "Physicist"}.count
+  #   team["chemist"] = current_user.user_questions.where(match_id: self.id).select {|uq| uq.question.person.name == "Chemist"}.count
+  #   team["politician"] = current_user.user_questions.where(match_id: self.id).select {|uq| uq.question.person.name == "Politician"}.count
+  #   team
+  # end
 end
