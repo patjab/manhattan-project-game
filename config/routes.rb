@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   get 'users/:id', to: 'users#show', as: 'user'
   post 'users/', to: 'users#create'
 
-  get 'matches/:id', to: 'matches#show', as: 'show_match'
+  get 'matches/:id', to: 'matches#show', as: 'match'
   post 'matches/:id', to: 'matches#evaluate', as: 'evaluate'
 
   get 'login', to: 'sessions#new', as: 'login'

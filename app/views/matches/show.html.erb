@@ -30,5 +30,5 @@ Current Question asked by the <%= @random_q.person.name %>:<br/>
   <% end %>
 <% else %>
 Wait for your opponent.<br/><br/><br/>
-<%= link_to "Refresh", show_match_path(@match.id) %>
+<%= link_to "Refresh", match_path(@match) %>
 <% end %>
