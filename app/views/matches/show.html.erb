@@ -22,11 +22,12 @@
 <% if current_user.id == @match.current_turn_user_id %>
 Current Question asked by the <%= @random_q.person.name %>:<br/>
 <%= @random_q.question %><br/>
-<%= link_to @random_q.option_a, wrong_answer_path(@match), method: :post %><br/>
-<%= link_to @random_q.option_b, wrong_answer_path(@match), method: :post %><br/>
-<%= link_to @random_q.option_c, wrong_answer_path(@match), method: :post %><br/>
-<%= link_to @random_q.option_d, wrong_answer_path(@match), method: :post %><br/>
-<%= link_to @random_q.answer, correct_answer_path(@match), method: :post %><br/>
+  <%= form_tag "/matches/#{@match.id}" do %>
+    <% @random_q.hash_of_options.each do |option, answer| %>
+      <%= radio_button_tag(:'question[option]', "#{option}") %> <%= option %><br/>
+    <% end %>
+    <%= submit_tag 'Answer' %>
+  <% end %>
 <% else %>
 Wait for your opponent.<br/><br/><br/>
 <%= link_to "Refresh", show_match_path(@match.id) %>

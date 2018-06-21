@@ -15,4 +15,14 @@ class Question < ApplicationRecord
     end
     q
   end
+
+  def hash_of_options
+    {
+      self.option_a => false,
+      self.option_b => false,
+      self.option_c => false,
+      self.option_d => false,
+      self.answer => true
+    }.select { |key, value| !key.nil? }
+  end
 end

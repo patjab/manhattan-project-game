@@ -1,6 +1,5 @@
 class MatchesController < ApplicationController
   before_action :authorized
-  #before_action :set_pokemon, only: [:show, :edit, :update, :destroy]
 
   def new
     @match = Match.new
@@ -15,53 +14,26 @@ class MatchesController < ApplicationController
   def show
     @team = team_count(current_user)
     @match = Match.find(params[:id])
-    # If it is their turn
 
     @espionage = espionage_ability?(@match, current_user)
 
-    # Generate a random question if none exists
-    if @match.current_question_id.nil?
-      @random_q = Question.random_question(current_user)
-      @match.current_question_id = @random_q.id
-      @match.save
-    # Or keep the one that does
+    @random_q = find_or_generate_random_question(@match)
+    @match.update(current_question_id: @random_q.id)
+  end
+
+  def evaluate
+    @match = Match.find(params[:id])
+    @random_q = Question.find(@match.current_question_id)
+    @espionage = espionage_ability?(@match, current_user)
+
+    if params[:question][:option] == @random_q.answer
+      UserQuestion.create(question: @random_q, user: current_user)
+      @match.is_challenger?(current_user) ? (@match.challenger_strikes = 0) : (@match.challenged_strikes = 0)
     else
-      @random_q = Question.find(@match.current_question_id)
+      @match.is_challenger?(current_user) ? (@match.challenger_strikes += 1) : (@match.challenged_strikes += 1)
     end
-  end
 
-  # This method switch the current users in the current_turn_user_id
-  # spot as well as reset the question
-  def wrong
-    # params[:format] will take in whatever is passed into the path
-    @match = Match.find(params[:format])
-    @espionage = espionage_ability?(@match, current_user)
-    @match.current_turn_user_id = @match.the_other_user(current_user).id
-    @match.current_question_id = nil
-    @match.is_challenger?(current_user) ? (@match.challenger_strikes += 1) : (@match.challenged_strikes += 1)
-    @match.save
-
-    @team = team_count(current_user)
-    render :'show.html'
-  end
-
-  def correct
-    # Person will now be associated with the user through a question
-    # along with following the same procedures for step change coded in
-    # #wrong
-    @match = Match.find(params[:format])
-    @espionage = espionage_ability?(@match, current_user)
-
-    uq = UserQuestion.new
-    uq.question = Question.find(@match.current_question_id)
-    uq.user = current_user
-    uq.save
-
-    @match.current_turn_user_id = @match.the_other_user(current_user).id
-    @match.current_question_id = nil
-    @match.is_challenger?(current_user) ? (@match.challenger_strikes = 0) : (@match.challenged_strikes = 0)
-    @match.save
-
+    @match.update(current_turn_user_id: @match.the_other_user(current_user).id, current_question_id: nil)
     @team = team_count(current_user)
     render :'show.html'
   end
@@ -80,7 +52,6 @@ class MatchesController < ApplicationController
     end
   end
 
-
   private
   def team_count(current_user)
     team = Hash.new
@@ -93,5 +64,9 @@ class MatchesController < ApplicationController
 
   def espionage_ability?(match, current_user)
     (match.is_challenger?(current_user) && match.challenged_strikes > 2) || (match.is_challenged?(current_user) && match.challenger_strikes > 2)
+  end
+
+  def find_or_generate_random_question(match)
+    (match.current_question_id && Question.find(match.current_question_id)) || Question.random_question(current_user)
   end
 end
