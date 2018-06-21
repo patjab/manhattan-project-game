@@ -12,8 +12,8 @@ class MatchesController < ApplicationController
   end
 
   def show
-    @team = team_count(current_user)
     @match = Match.find(params[:id])
+    @team = team_count(current_user, @match)
 
     @espionage = espionage_ability?(@match, current_user)
 
@@ -26,15 +26,15 @@ class MatchesController < ApplicationController
     @random_q = Question.find(@match.current_question_id)
     @espionage = espionage_ability?(@match, current_user)
 
-    if params[:question][:option] == @random_q.answer
-      UserQuestion.create(question: @random_q, user: current_user)
+    if params[:question][:option] == @random_q.answer # If correct answer is chosen
+      UserQuestion.create(question: @random_q, user: current_user, match_id: @match.id)
       @match.is_challenger?(current_user) ? (@match.challenger_strikes = 0) : (@match.challenged_strikes = 0)
     else
       @match.is_challenger?(current_user) ? (@match.challenger_strikes += 1) : (@match.challenged_strikes += 1)
     end
 
     @match.update(current_turn_user_id: @match.the_other_user(current_user).id, current_question_id: nil)
-    @team = team_count(current_user)
+    @team = team_count(current_user, @match)
     render :'show.html'
   end
 
@@ -53,12 +53,12 @@ class MatchesController < ApplicationController
   end
 
   private
-  def team_count(current_user)
+  def team_count(current_user, match)
     team = Hash.new
-    team["mathematician"] = current_user.people.where(name: "Mathematician").count
-    team["physicist"] = current_user.people.where(name: "Physicist").count
-    team["chemist"] = current_user.people.where(name: "Chemist").count
-    team["politician"] = current_user.people.where(name: "Politician").count
+    team["mathematician"] = current_user.user_questions.where(match_id: @match.id).select {|uq| uq.question.person.name == "Mathematician"}.count
+    team["physicist"] = current_user.user_questions.where(match_id: @match.id).select {|uq| uq.question.person.name == "Physicist"}.count
+    team["chemist"] = current_user.user_questions.where(match_id: @match.id).select {|uq| uq.question.person.name == "Chemist"}.count
+    team["politician"] = current_user.user_questions.where(match_id: @match.id).select {|uq| uq.question.person.name == "Politician"}.count
     team
   end
 

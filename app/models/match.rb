@@ -2,6 +2,9 @@ class Match < ApplicationRecord
   belongs_to :challenger, class_name: 'User'
   belongs_to :challenged, class_name: 'User'
 
+  has_many :questions, through: :challengers
+  has_many :people, through: :questions
+
   # Roll the dice
   def choose_first_user
     users = [self.challenger, self.challenged]
