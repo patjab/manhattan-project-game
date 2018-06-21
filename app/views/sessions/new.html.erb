@@ -1,0 +1,9 @@
+<h1>Welcome to Project Manhattan! </br>- the race to build the atomic bomb.</h1>
+<%= form_tag controller: 'sessions', action: 'create', method: 'post' do %>
+  <%= label_tag :user_name %><br/>
+  <%= text_field_tag :user_name %><br/>
+  <%= label_tag :password %><br/>
+  <%= password_field_tag :password %><br/>
+  <%= submit_tag 'Login' %><br/>
+<% end %><br/>
+No Username? <%= link_to 'Sign up', signup_path %>

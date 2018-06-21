@@ -1,0 +1,34 @@
+<h1><%= @match.challenger.user_name %>'s <%= @match.challenger.nation_name %><br/>
+  vs.<br/>
+<%= @match.challenged.user_name %>'s <%= @match.challenged.nation_name %></h1>
+<br/><br/>
+<h2>Your Team:</h2><br/>
+<%= @team["physicist"] %> Physicist<br/>
+<%= @team["chemist"] %> Chemist<br/>
+<%= @team["mathematician"] %> Mathematician<br/>
+<%= @team["politician"] %> Politician
+<br/><br/>
+<h2>Wrong Answers Strikes</h2><br/>
+<%= @match.challenger.user_name %>: <%= @match.challenger_strikes %><br/>
+<%= @match.challenged.user_name %>: <%= @match.challenged_strikes %><br/><br/>
+<h2>Abilities:</h2><br/>
+<% if @espionage %>
+<%= submit_tag 'Espionage' %>
+<% else %>
+<%= submit_tag 'Espionage', disabled: true %>
+<% end %>
+<br/><br/>
+<h2>Question:</h2><br/>
+<% if current_user.id == @match.current_turn_user_id %>
+Current Question asked by the <%= @random_q.person.name %>:<br/>
+<%= @random_q.question %><br/>
+  <%= form_tag "/matches/#{@match.id}" do %>
+    <% @random_q.hash_of_options.each do |option, answer| %>
+      <%= radio_button_tag(:'question[option]', "#{option}") %> <%= option %><br/>
+    <% end %>
+    <%= submit_tag 'Answer' %>
+  <% end %>
+<% else %>
+Wait for your opponent.<br/><br/><br/>
+<%= link_to "Refresh", match_path(@match) %>
+<% end %>
