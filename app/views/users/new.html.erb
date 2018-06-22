@@ -1,12 +1,19 @@
 <h1>Create A New User</h1>
 <%= form_for @user do |f| %>
 <%= f.label :user_name %><br/>
-<%= f.text_field :user_name %><br/><br/>
+<%= f.text_field :user_name %><br/>
+<span class="err_msgs"><% if @error_messages %><% @error_messages[:user_name].each do |message| %><%= message %><br/><% end %><% end %></span>
+<br/>
 <%= f.label :nation_name %><br/>
-<%= f.text_field :nation_name %><br/><br/>
+<%= f.text_field :nation_name %><br/>
+<span class="err_msgs"><% if @error_messages %><% @error_messages[:nation_name].each do |message| %><%= message %><br/><% end %><% end %></span>
+<br/>
 <%= f.label :password %><br/>
 <%= f.password_field :password %><br/><br/>
 <%= f.label :password_confirmation %><br/>
-<%= f.password_field :password_confirmation %><br/><br/>
+<%= f.password_field :password_confirmation %><br/>
+<span class="err_msgs"><% if @error_messages %><% @error_messages[:password].each do |message| %><%= message %><br/><% end %><% end %></span>
+<span class="err_msgs"><% if @error_messages %><% @error_messages[:password_confirmation].each do |message| %><%= message %><br/><% end %><% end %></span>
+<br/>
 <%= f.submit %><br/>
 <% end %>

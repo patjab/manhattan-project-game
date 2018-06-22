@@ -94,7 +94,9 @@
             <%= @team["mathematician"] %> Mathematician(s)<br/>
             <%= @team["politician"] %> Politician(s)
           </div>
-
+          <div class="col-md-3">
+            <h2>Timeline</h2>
+          </div>
           <div class="col-md-3">
             <h2>Security Breaches</h2><br/>
             <%= @match.challenger.user_name %>: <%= @match.challenger_strikes %><br/>
@@ -108,9 +110,7 @@
             <%= submit_tag 'Espionage', disabled: true %>
             <% end %>
           </div>
-          <div class="col-md-3">
-            <h2>Status</h2>
-          </div>
+
 </div>
 
 <h2><%= link_to "Resign", destroy_match_path(@match), method: :delete, confirm: "Are you sure?" %></h2>

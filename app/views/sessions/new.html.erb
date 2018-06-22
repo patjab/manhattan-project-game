@@ -6,7 +6,9 @@
   <%= text_field_tag :user_name %><br/>
   <%= label_tag :password %><br/>
   <%= password_field_tag :password %><br/><br/>
-  <%= submit_tag 'Login' %><br/>
+  <%= submit_tag 'Login' %><br/><br/>
+
+  <% if !@validity %><span class="err_msgs">Username and password combination is not valid.</span><br/><% end %>
 <% end %><br/>
 No Username? <%= link_to 'Sign up', signup_path %>
 </div>
