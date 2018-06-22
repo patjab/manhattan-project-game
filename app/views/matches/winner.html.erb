@@ -1,0 +1,14 @@
+<%= image_tag("winner.png", :size => "250x200") %>
+<h1><%= @match.challenger.nation_name %> vs. <%= @match.challenged.nation_name %><br/><br/>
+
+CONGRATULATIONS…YOUR COUNTRY,<br/>
+<%= @winner.nation_name %>,<br/>
+HAS HELPED WIN THE WAR.<br/><br/>
+Today, with atomic power a reality,<br/>
+scientists and statespersons are<br/>
+seeking a way to safeguard the world<br/>
+against its misuse.
+</h1>
+
+<h2><%= link_to "Erase History", destroy_match_path(@match), method: :delete, confirm: "Are you sure?" %></h2>
+<h2><%= link_to "Mission Control", matches_path %></h2>

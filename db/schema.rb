@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_21_111332) do
+ActiveRecord::Schema.define(version: 2018_06_22_033425) do
 
   create_table "matches", force: :cascade do |t|
     t.integer "challenger_id"
@@ -22,6 +22,8 @@ ActiveRecord::Schema.define(version: 2018_06_21_111332) do
     t.integer "current_question_id"
     t.integer "challenger_strikes", default: 0
     t.integer "challenged_strikes", default: 0
+    t.boolean "espionage_on_challenger", default: false
+    t.boolean "espionage_on_challenged", default: false
   end
 
   create_table "people", force: :cascade do |t|

@@ -14,8 +14,12 @@ class User < ApplicationRecord
   validates :user_name, uniqueness: true
 
   validates :user_name, :length => { :in => 6..20 }
-  validates :password, :length => { :in => 8..20 }
-  validates :user_name, :nation_name, :password, presence: true
+  validates :user_name, presence: true
+
+  validates :password, :presence => true, :confirmation => true, :length => {:within => 6..20}, :on => :create
+  validates :password, :confirmation => true, :length => {:within => 6..20}, :allow_blank => true, :on => :update
+
+
   #validates :user_name, :format => { :with => /^(?![0-9]*$)[a-zA-Z0-9]+$/ }
   #validates :password, with: [/^(?=.*[a-zA-Z])(?=.*[0-9]).{6,}$/]
 end

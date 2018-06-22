@@ -30,8 +30,8 @@
 <div class="rightalign">
 <% if logged_in? %>
 
-      Logged in as <%= current_user.user_name %> [<%= link_to "Logout", {:controller => :sessions, :action => 'destroy' }, :method => :delete %>] |
-      Nation: <%= current_user.nation_name %>
+      <b>Logged in as <%= current_user.user_name %> [<%= link_to "Logout", {:controller => :sessions, :action => 'destroy' }, :method => :delete %>] |
+      Nation: <%= current_user.nation_name %></b>
       <% end %>
     </div>
 
