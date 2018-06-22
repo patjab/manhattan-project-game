@@ -23,4 +23,6 @@ Rails.application.routes.draw do
   delete 'logout', to: 'sessions#destroy', as: 'logout'
 
   get 'rules', to: 'static#rules', as: 'rules'
+
+  post 'espionage', to: 'matches#espionage', as: 'espionage'
 end

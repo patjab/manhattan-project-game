@@ -23,7 +23,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user = User.find(params[:id])
+    @user = current_user
     @user.nation_name = params[:user][:nation_name].capitalize
     @user.save
     redirect_to matches_path(@user)

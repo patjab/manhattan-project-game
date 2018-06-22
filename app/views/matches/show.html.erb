@@ -96,6 +96,7 @@
           </div>
           <div class="col-md-3">
             <h2>Timeline</h2>
+            <%= @message %>
           </div>
           <div class="col-md-3">
             <h2>Security Breaches</h2><br/>
@@ -103,11 +104,14 @@
             <%= @match.challenged.user_name %>: <%= @match.challenged_strikes %><br/><br/>
           </div>
           <div class="col-md-3">
-            <h2>Send a Spy</h2><br/>
-            <% if @espionage %>
-            <%= submit_tag 'Espionage' %>
-            <% else %>
-            <%= submit_tag 'Espionage', disabled: true %>
+            <h2>Send a Spy</h2>
+            (available after 3 breaches)<br/><br/>
+            <%= form_tag controller: 'matches', action: 'espionage', method: 'post' do %>
+              <% if @espionage %>
+              <%= submit_tag 'Espionage' %>
+              <% else %>
+              <%= submit_tag 'Espionage', disabled: true %>
+              <% end %>
             <% end %>
           </div>
 
