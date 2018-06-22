@@ -28,7 +28,9 @@ class MatchesController < ApplicationController
     @espionage = espionage_ability?(@match, current_user)
 
     if params[:question][:option] == @random_q.answer # If correct answer is chosen
-      UserQuestion.create(question: @random_q, user: current_user, match_id: @match.id)
+      if team_count(current_user, @match)[@random_q.person.name.downcase] < 4
+        UserQuestion.create(question: @random_q, user: current_user, match_id: @match.id)
+      end
       @match.is_challenger?(current_user) ? (@match.challenger_strikes = 0) : (@match.challenged_strikes = 0)
     else
       @match.is_challenger?(current_user) ? (@match.challenger_strikes += 1) : (@match.challenged_strikes += 1)
