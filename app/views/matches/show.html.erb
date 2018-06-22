@@ -1,34 +1,117 @@
-<h1><%= @match.challenger.user_name %>'s <%= @match.challenger.nation_name %><br/>
-  vs.<br/>
-<%= @match.challenged.user_name %>'s <%= @match.challenged.nation_name %></h1>
-<br/><br/>
-<h2>Your Team:</h2><br/>
-<%= @team["physicist"] %> Physicist(s)<br/>
-<%= @team["chemist"] %> Chemist(s)<br/>
-<%= @team["mathematician"] %> Mathematician(s)<br/>
-<%= @team["politician"] %> Politician(s)
-<br/><br/>
-<h2>Security Breaches</h2><br/>
-<%= @match.challenger.user_name %>: <%= @match.challenger_strikes %><br/>
-<%= @match.challenged.user_name %>: <%= @match.challenged_strikes %><br/><br/>
-<h2>Send a Spy</h2><br/>
-<% if @espionage %>
-<%= submit_tag 'Espionage' %>
-<% else %>
-<%= submit_tag 'Espionage', disabled: true %>
-<% end %>
-<br/><br/>
-<h2>Question:</h2><br/>
-<% if current_user.id == @match.current_turn_user_id %>
-Current Question asked by the <%= @random_q.person.name %>:<br/>
-<%= @random_q.question %><br/>
-  <%= form_tag "/matches/#{@match.id}" do %>
-    <% @random_q.hash_of_options.each do |option, answer| %>
-      <%= radio_button_tag(:'question[option]', "#{option}") %> <%= option %><br/>
-    <% end %>
-    <%= submit_tag 'Answer' %>
-  <% end %>
-<% else %>
-Wait for your opponent.<br/><br/><br/>
-<%= link_to "Refresh", match_path(@match) %>
-<% end %>
+<script type="text/javascript">
+
+  // Load the Visualization API and the corechart package.
+  google.charts.load('current', {'packages':['corechart']});
+
+  // Set a callback to run when the Google Visualization API is loaded.
+  google.charts.setOnLoadCallback(drawChart);
+
+  // Callback that creates and populates a data table,
+  // instantiates the pie chart, passes in the data and
+  // draws it.
+  function drawChart() {
+
+
+
+    var challenger = "<%= @match.challenger.nation_name %>";
+    var challenged = "<%= @match.challenged.nation_name %>";
+    // Create the data table.
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Nation');
+    data.addColumn('number', 'Year');
+    data.addRows([
+      [challenger, <%= @match.challenger.user_questions.where(match_id: @match.id).count %>],
+      [challenged, <%= @match.challenged.user_questions.where(match_id: @match.id).count %>]
+    ]);
+
+    // Set chart options
+    var options = {'title':'Timeline',
+                   'width':900,
+                   'height':300,
+                   hAxis: {
+                   viewWindow: {
+                       min: 0,
+                       max: 16
+                   },
+                   ticks: [0, 4, 8, 12, 16] // display labels every 25
+                    },
+                   colors: ['#AA0000', '#0011FF']
+                 };
+
+    // Instantiate and draw our chart, passing in some options.
+    var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+    chart.draw(data, options);
+  }
+</script>
+
+
+
+<div class="container">
+
+
+<div class="row">
+      <h1><%= @match.challenger.nation_name %> vs. <%= @match.challenged.nation_name %></h1>
+  </div>
+
+<div class="row">
+  <div class="col-md-3">
+    <%= image_tag("atomic.png", :size => "250x200") %>
+  </div>
+  <div class="col-md-3">
+    <center><div id="chart_div"></div></center>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="row question">
+
+        <h2>Question:</h2><br/>
+        <% if current_user.id == @match.current_turn_user_id %>
+        The <%= @random_q.person.name %> asks:<br/>
+        <%= @random_q.question %><br/>
+          <%= form_tag "/matches/#{@match.id}" do %>
+            <% @random_q.hash_of_options.each do |option, answer| %>
+              <%= radio_button_tag(:'question[option]', "#{option}") %> <%= option %><br/>
+            <% end %>
+            <%= submit_tag 'Answer' %><br/><br/>
+          <% end %>
+        <% else %>
+        Wait for your opponent.<br/><br/><br/>
+        <%= link_to "Refresh", match_path(@match) %><br/><br/>
+        <% end %>
+
+</div>
+
+<div class="row">
+          <div class="col-md-3">
+            <h2>Your Team:</h2><br/>
+            <%= @team["physicist"] %> Physicist(s)<br/>
+            <%= @team["chemist"] %> Chemist(s)<br/>
+            <%= @team["mathematician"] %> Mathematician(s)<br/>
+            <%= @team["politician"] %> Politician(s)
+          </div>
+          <div class="col-md-3">
+            <h2>Timeline</h2>
+          </div>
+          <div class="col-md-3">
+            <h2>Security Breaches</h2><br/>
+            <%= @match.challenger.user_name %>: <%= @match.challenger_strikes %><br/>
+            <%= @match.challenged.user_name %>: <%= @match.challenged_strikes %><br/><br/>
+          </div>
+          <div class="col-md-3">
+            <h2>Send a Spy</h2><br/>
+            <% if @espionage %>
+            <%= submit_tag 'Espionage' %>
+            <% else %>
+            <%= submit_tag 'Espionage', disabled: true %>
+            <% end %>
+          </div>
+
+</div>
+
+<h2><%= link_to "Resign", destroy_match_path(@match), method: :delete, confirm: "Are you sure?" %></h2>
+</div>

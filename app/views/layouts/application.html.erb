@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>ManhattanProjectGame</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <title>The Manhattan Project Game</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -10,18 +12,41 @@
   </head>
 
   <body>
-    <h4>
+
+<div class="topnav">
+
       <% if logged_in? %>
-      Logged in as <%= current_user.user_name %> [<%= link_to "Logout", {:controller => :sessions, :action => 'destroy' }, :method => :delete %>] |
-      Nation: <%= current_user.nation_name %> |
+
       <%= link_to "Mission Control", matches_path %> |
       <%= link_to "Rename Nation", edit_user_path(current_user) %> |
       <% else %>
       <%= link_to 'Login', login_path %> |
+      <%= link_to 'Sign Up', signup_path %> |
       <% end %>
       <%= link_to "Rules", rules_path %> |
       <%= link_to "Rankings", users_path %>
-    </h4>
-    <center><%= yield %></center>
+</div>
+
+<div class="rightalign">
+<% if logged_in? %>
+
+      Logged in as <%= current_user.user_name %> [<%= link_to "Logout", {:controller => :sessions, :action => 'destroy' }, :method => :delete %>] |
+      Nation: <%= current_user.nation_name %>
+      <% end %>
+    </div>
+
+
+
+    <div class="outeralign">
+
+        <%= yield %>
+
+    </div>
+
   </body>
+
+
+
+
+
 </html>

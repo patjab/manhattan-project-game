@@ -8,7 +8,7 @@ class UsersController < ApplicationController
   end
 
   def edit
-    @user = User.find(params[:id])
+    @user = User.find(current_user.id)
   end
 
   def create
@@ -17,7 +17,8 @@ class UsersController < ApplicationController
       @user.save
       redirect_to user_path(@user)
     else
-      redirect_to login_path
+      @error_messages = @user.errors.messages
+      render :'new.html'
     end
   end
 
@@ -35,7 +36,7 @@ class UsersController < ApplicationController
   private
   def user_params
     params[:user][:user_name].nil? ? (params[:user][:user_name] = User.find(params[:id]).user_name) : nil
-    params[:user][:user_name].capitalize!
+    params[:user][:nation_name].capitalize!
     params.require(:user).permit(:user_name, :nation_name, :password, :password_confirmation)
   end
 end

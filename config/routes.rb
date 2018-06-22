@@ -16,6 +16,8 @@ Rails.application.routes.draw do
   get 'matches/:id', to: 'matches#show', as: 'match'
   post 'matches/:id', to: 'matches#evaluate', as: 'evaluate'
 
+  delete 'matches/:id', to: 'matches#destroy', as: 'destroy_match'
+
   get 'login', to: 'sessions#new', as: 'login'
   post 'login', to: 'sessions#create', as: 'session'
   delete 'logout', to: 'sessions#destroy', as: 'logout'
