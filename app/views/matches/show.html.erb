@@ -8,11 +8,12 @@
     var challenged = "<%= @match.challenged.nation_name %>";
 
     var data = new google.visualization.DataTable();
+
     data.addColumn('string', 'Nation');
     data.addColumn('number', 'Year');
     data.addRows([
-      [challenger, <%= @match.challenger.user_questions.where(match_id: @match.id).count %>],
-      [challenged, <%= @match.challenged.user_questions.where(match_id: @match.id).count %>]
+      [challenger, <%= @match.challenger.user_questions.where(match_id: @match.id).count %>+1919],
+      [challenged, <%= @match.challenged.user_questions.where(match_id: @match.id).count %>+1919]
     ]);
 
     var options = {'title':'Timeline',
@@ -20,10 +21,10 @@
                    'height':300,
                    hAxis: {
                    viewWindow: {
-                       min: 0,
-                       max: 16
+                       min: 1919,
+                       max: 1945
                    },
-                   ticks: [0, 4, 8, 12, 16] // display labels every 25
+                   ticks: [1919, 1925, 1930, 1935, 1940, 1945] // display labels every 25
                     },
                    colors: ['#AA0000', '#0011FF']
                  };
@@ -31,6 +32,8 @@
     var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
     chart.draw(data, options);
   }
+
+
 </script>
 
 
@@ -59,8 +62,9 @@
 <div class="row question">
         <% if @espionage_on_you %><span class="err_msgs"><h2>YOU ARE BEING SPIED ON!<br/>You must answer this question correctly to avoid poaching.</h2></span><% end %>
         <% if @espionage_on_opponent %><span class="err_msgs"><h2>Your spy is attempting to poach from your opponent's team.</h2></span><% end %>
-        <h2>Question:</h2><br/>
+
         <% if current_user.id == @match.current_turn_user_id %>
+        <h2>Question:</h2><br/>
         The <%= @random_q.person.name %> asks:<br/>
 
         <%= @random_q.question %><br/>
@@ -69,10 +73,20 @@
               <%= radio_button_tag(:'question[option]', "#{option}") %> <%= option %><br/>
             <% end %><br/>
             <%= submit_tag 'Answer' %><br/><br/>
+            <br/>
           <% end %>
         <% else %>
-        Wait for your opponent.<br/><br/><br/>
-        <%= link_to "Refresh", match_path(@match) %><br/><br/>
+
+        <% if @correctness_msg == nil %>
+          <br/>
+        <% elsif @correctness_msg == true %>
+          <span class="correct"><h2><b>Congratulations. A <%=@random_q.person.name.downcase%> just joined your team!</b></h2></span>
+        <% elsif @correctness_msg == false %>
+          <span class="incorrect"><h2><b>Wrong! The <%=@random_q.person.name.downcase%> didn't join your team.</b></h2></span>
+        <% end %>
+        <br/>
+        Wait for your opponent.<br/><br/>
+        <%= link_to "Refresh", match_path(@match) %><br/><br/><br/>
         <% end %>
 
 </div>

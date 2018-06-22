@@ -13,6 +13,7 @@ class MatchesController < ApplicationController
   end
 
   def show
+    @correctness_msg = nil
     @match = Match.find(params[:id])
     if @match.total_num_of_team_players(current_user) > 15
       @winner = current_user
@@ -41,8 +42,10 @@ class MatchesController < ApplicationController
     @espionage = @match.espionage_ability?(current_user)
     @espionage_on_you = @match.espionage_on_you?(current_user)
     @message = messages[@match.total_num_of_team_players(current_user)]
+    @correctness_msg = nil
 
     if params[:question][:option] == @random_q.answer # If correct answer is chosen
+      @correctness_msg = true
       if @match.team_count(current_user)[@random_q.person.name.downcase] < 4
         UserQuestion.create(question: @random_q, user: current_user, match_id: @match.id)
       end
@@ -61,6 +64,7 @@ class MatchesController < ApplicationController
 
       # @match.is_challenger?(current_user) ? (@match.challenger_strikes = 0) : (@match.challenged_strikes = 0)
     else # get it wrong
+      @correctness_msg = false
       if !@espionage_on_you # no espionage
         @match.is_challenger?(current_user) ? (@match.challenger_strikes += 1) : (@match.challenged_strikes += 1)
       else # there is espionage
