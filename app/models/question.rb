@@ -16,7 +16,7 @@ class Question < ApplicationRecord
     q
   end
 
-  def hash_of_options
+  def sorted_hash_of_options
     {
       self.option_a => false,
       self.option_b => false,
@@ -24,5 +24,14 @@ class Question < ApplicationRecord
       self.option_d => false,
       self.answer => true
     }.select { |key, value| !key.nil? }
+  end
+
+  def hash_of_options
+    result = Hash.new
+    options = sorted_hash_of_options.keys
+    while options.length > 0
+      result[options.delete_at(rand(0...options.length))] = false
+    end
+    result
   end
 end
