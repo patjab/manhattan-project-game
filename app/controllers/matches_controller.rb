@@ -14,9 +14,23 @@ class MatchesController < ApplicationController
 
   def show
     @match = Match.find(params[:id])
+    if @match.total_num_of_team_players(current_user) > 15
+      @winner = current_user
+      @loser = @match.the_other_user(current_user)
+      render :'winner.html'
+    end
+
+    if @match.total_num_of_team_players(@match.the_other_user(current_user)) > 15
+      @winner = @match.the_other_user(current_user)
+      @loser = current_user
+      render :'loser.html'
+    end
+
     @team = @match.team_count(current_user)
     @espionage = @match.espionage_ability?(current_user)
     @random_q = @match.find_or_generate_random_question(current_user)
+    @espionage_on_you = @match.espionage_on_you?(current_user)
+    @espionage_on_opponent = @match.espionage_on_you?(@match.the_other_user(current_user))
     @match.update(current_question_id: @random_q.id)
     @message = messages[@match.total_num_of_team_players(current_user)]
   end
@@ -25,15 +39,44 @@ class MatchesController < ApplicationController
     @match = Match.find(params[:id])
     @random_q = Question.find(@match.current_question_id)
     @espionage = @match.espionage_ability?(current_user)
+    @espionage_on_you = @match.espionage_on_you?(current_user)
     @message = messages[@match.total_num_of_team_players(current_user)]
-    
+
     if params[:question][:option] == @random_q.answer # If correct answer is chosen
       if @match.team_count(current_user)[@random_q.person.name.downcase] < 4
         UserQuestion.create(question: @random_q, user: current_user, match_id: @match.id)
       end
-      @match.is_challenger?(current_user) ? (@match.challenger_strikes = 0) : (@match.challenged_strikes = 0)
-    else
-      @match.is_challenger?(current_user) ? (@match.challenger_strikes += 1) : (@match.challenged_strikes += 1)
+
+      if @espionage_on_you
+        if @match.is_challenger?(current_user)
+          # Reset the opponents' strikes and the espionage status
+          @match.challenger_strikes = 0
+          @match.espionage_on_challenger = false
+        else
+          @match.challenged_strikes = 0
+          @match.espionage_on_challenged = false
+        end
+        @match.save
+      end
+
+      # @match.is_challenger?(current_user) ? (@match.challenger_strikes = 0) : (@match.challenged_strikes = 0)
+    else # get it wrong
+      if !@espionage_on_you # no espionage
+        @match.is_challenger?(current_user) ? (@match.challenger_strikes += 1) : (@match.challenged_strikes += 1)
+      else # there is espionage
+        uq = UserQuestion.where(match_id: @match.id, user_id: current_user.id).select {|uq| @random_q.person == uq.question.person}.last # needs base cases
+        uq ? uq.update(user: @match.the_other_user(current_user)) : nil # switch the last team member from that respective category
+        if @match.is_challenger?(current_user)
+          # Reset the opponents' strikes and the espionage status
+          @match.challenger_strikes = 0
+          @match.espionage_on_challenger = false
+        else
+          @match.challenged_strikes = 0
+          @match.espionage_on_challenged = false
+        end
+        @match.save
+
+      end
     end
 
     @match.update(current_turn_user_id: @match.the_other_user(current_user).id, current_question_id: nil)
@@ -55,8 +98,12 @@ class MatchesController < ApplicationController
     end
   end
 
-  def espionage
-    byebug
+  def espionage_on
+    @match = Match.find(params[:id])
+    opponent = @match.the_other_user(current_user)
+    @match.is_challenger?(opponent) ? (@match.espionage_on_challenger = true) : (@match.espionage_on_challenged = true)
+    @match.save
+    redirect_to match_path(@match)
   end
 
   def destroy

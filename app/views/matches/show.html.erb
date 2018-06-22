@@ -1,21 +1,12 @@
 <script type="text/javascript">
-
-  // Load the Visualization API and the corechart package.
   google.charts.load('current', {'packages':['corechart']});
-
-  // Set a callback to run when the Google Visualization API is loaded.
   google.charts.setOnLoadCallback(drawChart);
 
-  // Callback that creates and populates a data table,
-  // instantiates the pie chart, passes in the data and
-  // draws it.
   function drawChart() {
-
-
 
     var challenger = "<%= @match.challenger.nation_name %>";
     var challenged = "<%= @match.challenged.nation_name %>";
-    // Create the data table.
+
     var data = new google.visualization.DataTable();
     data.addColumn('string', 'Nation');
     data.addColumn('number', 'Year');
@@ -24,9 +15,8 @@
       [challenged, <%= @match.challenged.user_questions.where(match_id: @match.id).count %>]
     ]);
 
-    // Set chart options
     var options = {'title':'Timeline',
-                   'width':900,
+                   'width':700,
                    'height':300,
                    hAxis: {
                    viewWindow: {
@@ -38,7 +28,6 @@
                    colors: ['#AA0000', '#0011FF']
                  };
 
-    // Instantiate and draw our chart, passing in some options.
     var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
     chart.draw(data, options);
   }
@@ -68,15 +57,17 @@
 
 
 <div class="row question">
-
+        <% if @espionage_on_you %><span class="err_msgs"><h2>YOU ARE BEING SPIED ON!<br/>You must answer this question correctly to avoid poaching.</h2></span><% end %>
+        <% if @espionage_on_opponent %><span class="err_msgs"><h2>Your spy is attempting to poach from your opponent's team.</h2></span><% end %>
         <h2>Question:</h2><br/>
         <% if current_user.id == @match.current_turn_user_id %>
         The <%= @random_q.person.name %> asks:<br/>
+
         <%= @random_q.question %><br/>
           <%= form_tag "/matches/#{@match.id}" do %>
             <% @random_q.hash_of_options.each do |option, answer| %>
               <%= radio_button_tag(:'question[option]', "#{option}") %> <%= option %><br/>
-            <% end %>
+            <% end %><br/>
             <%= submit_tag 'Answer' %><br/><br/>
           <% end %>
         <% else %>
@@ -106,7 +97,8 @@
           <div class="col-md-3">
             <h2>Send a Spy</h2>
             (available after 3 breaches)<br/><br/>
-            <%= form_tag controller: 'matches', action: 'espionage', method: 'post' do %>
+            <%= form_tag controller: 'matches', action: 'espionage_on', method: 'post' do %>
+              <%= hidden_field_tag :id, @match.id %>
               <% if @espionage %>
               <%= submit_tag 'Espionage' %>
               <% else %>

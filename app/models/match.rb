@@ -45,4 +45,8 @@ class Match < ApplicationRecord
   def espionage_ability?(current_user)
     (self.is_challenger?(current_user) && self.challenged_strikes > 2) || (self.is_challenged?(current_user) && self.challenger_strikes > 2)
   end
+
+  def espionage_on_you?(current_user)
+    (self.is_challenger?(current_user) && self.espionage_on_challenger) || (self.is_challenged?(current_user) && self.espionage_on_challenged)
+  end
 end

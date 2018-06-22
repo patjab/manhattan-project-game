@@ -1,0 +1,8 @@
+<%= image_tag("loser.png", :size => "250x200") %>
+<h1><%= @match.challenger.nation_name %> vs. <%= @match.challenged.nation_name %><br/><br/>
+
+You lost <%= @loser.nation_name %>.<br/>
+<%= @winner.nation_name %> built the atomic bomb before you.</h1>
+
+<h2><%= link_to "Erase History", destroy_match_path(@match), method: :delete, confirm: "Are you sure?" %></h2>
+<h2><%= link_to "Mission Control", matches_path %></h2>

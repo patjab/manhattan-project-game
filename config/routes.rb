@@ -24,5 +24,5 @@ Rails.application.routes.draw do
 
   get 'rules', to: 'static#rules', as: 'rules'
 
-  post 'espionage', to: 'matches#espionage', as: 'espionage'
+  post 'espionage', to: 'matches#espionage_on', as: 'espionage'
 end

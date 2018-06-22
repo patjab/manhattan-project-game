@@ -9,10 +9,10 @@ class Question < ApplicationRecord
   # I will go back to this to resolve the case when we run out of questions
   def self.random_question(user)
     q = nil
-    loop do
+    #loop do
       q = Question.all[rand(Question.all.count)]
-      break if !user.questions.include?(q)
-    end
+      #break if !user.questions.include?(q)
+    #end
     q
   end
 
