@@ -34,4 +34,8 @@ class Question < ApplicationRecord
     end
     result
   end
+
+  def correct_response?(response)
+    self.answer == response
+  end
 end

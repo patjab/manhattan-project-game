@@ -41,6 +41,12 @@ class User < ApplicationRecord
     uq ? (self.team_roaster(match)[person.name] < 4 ? uq.update(user: self) : uq.destroy) : nil
   end
 
+  def process_response(match, question, response)
+    question.correct_response?(response) ? process_correct_response(match, question) : process_wrong_response(match, question)
+    question.correct_response?(response)
+  end
+
+  private
   def process_correct_response(match, question)
     self.award_the_question(match, question)
     !match.espionage_on_you?(self) ? nil : match.espionage_over(self)

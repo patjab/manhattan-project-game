@@ -14,16 +14,17 @@ class MatchesController < ApplicationController
   end
 
   def show
+    current_user != @match.challenger && current_user != @match.challenged ? redirect_to(matches_path) : nil
     @match.winner_of_match ? (render :'finished.html') : nil
     @team = current_user.team_roaster(@match)
     @espionage_on_opponent = @match.espionage_on_you?(@opponent)
-    @match.update(current_question_id: @random_q.id)
+    @match.update(current_question_id: @question.id)
     @message = Stage.as_readable_array[current_user.total_team_members(@match)]
   end
 
   def evaluate
     @message = Stage.as_readable_array[current_user.total_team_members(@match)]
-    @correctness_msg = (params[:question][:option] == @random_q.answer ? current_user.process_correct_response(@match, @random_q) : current_user.process_wrong_response(@match, @random_q))
+    @correctness_msg = current_user.process_response(@match, @question, params[:question][:option])
     @match.update(current_turn_user_id: @opponent.id, current_question_id: nil)
     @team = current_user.team_roaster(@match)
     render :'show.html'
@@ -58,7 +59,7 @@ class MatchesController < ApplicationController
   private
   def preserve_turn_statefulness
     @match = Match.find(params[:id])
-    @random_q = @match.find_or_generate_random_question(current_user)
+    @question = @match.find_or_generate_random_question(current_user)
     @espionage = @match.espionage_ability?(current_user)
     @espionage_on_you = @match.espionage_on_you?(current_user)
     @opponent = @match.the_other_user(current_user)

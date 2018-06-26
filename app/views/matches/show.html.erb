@@ -55,11 +55,11 @@
 
         <% if current_user.id == @match.current_turn_user_id %>
         <h2>Question:</h2><br/>
-        The <%= @random_q.person.name %> asks:<br/>
+        The <%= @question.person.name %> asks:<br/>
 
-        <%= @random_q.question %><br/>
+        <%= @question.question %><br/>
           <%= form_tag "/matches/#{@match.id}" do %>
-            <% @random_q.hash_of_options.each do |option, answer| %>
+            <% @question.hash_of_options.each do |option, answer| %>
               <%= radio_button_tag(:'question[option]', "#{option}") %> <%= option %><br/>
             <% end %><br/>
             <%= submit_tag 'Answer' %><br/><br/>
@@ -70,9 +70,9 @@
         <% if @correctness_msg == nil %>
           <br/>
         <% elsif @correctness_msg == true %>
-          <span class="correct"><h2><b>Congratulations. A <%=@random_q.person.name.downcase%> just joined your team!</b></h2></span>
+          <span class="correct"><h2><b>Congratulations. A <%=@question.person.name.downcase%> just joined your team!</b></h2></span>
         <% elsif @correctness_msg == false %>
-          <span class="incorrect"><h2><b>Wrong! The <%=@random_q.person.name.downcase%> didn't join your team.</b></h2></span>
+          <span class="incorrect"><h2><b>Wrong! The <%=@question.person.name.downcase%> didn't join your team.</b></h2></span>
         <% end %>
         <br/>
         Wait for your opponent.<br/><br/>
