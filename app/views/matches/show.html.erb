@@ -32,14 +32,9 @@
     var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
     chart.draw(data, options);
   }
-
-
 </script>
 
-
-
 <div class="container">
-
 
 <div class="row">
       <h1><%= @match.challenger.nation_name %> vs. <%= @match.challenged.nation_name %></h1>
@@ -52,12 +47,7 @@
   <div class="col-md-3">
     <center><div id="chart_div"></div></center>
   </div>
-
-
 </div>
-
-
-
 
 <div class="row question">
         <% if @espionage_on_you %><span class="err_msgs"><h2>YOU ARE BEING SPIED ON!<br/>You must answer this question correctly to avoid poaching.</h2></span><% end %>
@@ -115,7 +105,7 @@
               <% if @espionage %>
               <%= submit_tag 'Espionage' %>
               <% else %>
-              <%= submit_tag 'Espionage', disabled: true %>
+              <%= submit_tag 'Espionage', disabled: 'true' %>
               <% end %>
             <% end %>
           </div>
