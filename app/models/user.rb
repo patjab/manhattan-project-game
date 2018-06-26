@@ -1,3 +1,6 @@
+# The User class will only contain the methods relating to determining what the
+# user has, and editing what the user has (awarding, and poaching)
+
 class User < ApplicationRecord
   has_secure_password
 
@@ -12,14 +15,45 @@ class User < ApplicationRecord
   has_many :people, through: :questions
 
   validates :user_name, uniqueness: true
-
   validates :user_name, :length => { :in => 6..20 }
   validates :user_name, presence: true
-
   validates :password, :presence => true, :confirmation => true, :length => {:within => 6..20}, :on => :create
   validates :password, :confirmation => true, :length => {:within => 6..20}, :allow_blank => true, :on => :update
 
+  def team_roaster(match = nil)
+    team = Hash.new
+    filter = match ? ("match_id = #{match.id}") : ("id IS NOT NULL")
+    Person.all.each {|person| team[person.name] = self.user_questions.where(filter).select {|uq| uq.question.person.name == person.name}.count }
+    team
+  end
 
-  #validates :user_name, :format => { :with => /^(?![0-9]*$)[a-zA-Z0-9]+$/ }
-  #validates :password, with: [/^(?=.*[a-zA-Z])(?=.*[0-9]).{6,}$/]
+  def total_team_members(match = nil)
+    match.nil? ? self.user_questions.count : (self.user_questions.where(match_id: match.id).count)
+  end
+
+  def award_the_question(match, question)
+    self.team_roaster(match)[question.person.name] < 4 ? (UserQuestion.create(question: question, user: self, match: match)) : nil
+  end
+
+  def poach_from_opponent(match, person)
+    opponent = match.the_other_user(self)
+    uq = opponent.user_questions.where(match_id: match.id).select {|uq| person == uq.question.person}.last
+    uq ? (self.team_roaster(match)[person.name] < 4 ? uq.update(user: self) : uq.destroy) : nil
+  end
+
+  def process_correct_response(match, question)
+    self.award_the_question(match, question)
+    !match.espionage_on_you?(self) ? nil : match.espionage_over(self)
+    true
+  end
+
+  def process_wrong_response(match, question)
+    if !match.espionage_on_you?(self)
+      match.add_strike(self)
+    else
+      match.the_other_user(self).poach_from_opponent(match, question.person)
+      match.espionage_over(self)
+    end
+    false
+  end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_22_033425) do
+ActiveRecord::Schema.define(version: 2018_06_25_114515) do
 
   create_table "matches", force: :cascade do |t|
     t.integer "challenger_id"
@@ -42,6 +42,12 @@ ActiveRecord::Schema.define(version: 2018_06_22_033425) do
     t.integer "person_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "stages", force: :cascade do |t|
+    t.integer "year"
+    t.string "stage"
+    t.string "message"
   end
 
   create_table "user_questions", force: :cascade do |t|

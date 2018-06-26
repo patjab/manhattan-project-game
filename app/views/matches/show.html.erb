@@ -12,8 +12,8 @@
     data.addColumn('string', 'Nation');
     data.addColumn('number', 'Year');
     data.addRows([
-      [challenger, <%= @match.challenger.user_questions.where(match_id: @match.id).count %>+1919],
-      [challenged, <%= @match.challenged.user_questions.where(match_id: @match.id).count %>+1919]
+      [challenger, (1.625*<%= @match.challenger.user_questions.where(match_id: @match.id).count %>)+1919],
+      [challenged, (1.625*<%= @match.challenged.user_questions.where(match_id: @match.id).count %>)+1919]
     ]);
 
     var options = {'title':'Timeline',
@@ -93,18 +93,17 @@
 
 <div class="row">
           <div class="col-md-3">
-            <h2>Your Team:</h2><br/>
-            <%= @team["physicist"] %> Physicist(s)<br/>
-            <%= @team["chemist"] %> Chemist(s)<br/>
-            <%= @team["mathematician"] %> Mathematician(s)<br/>
-            <%= @team["politician"] %> Politician(s)
+            <h2>Your Team:</h2>
+            <% @team.each do |person, amount| %>
+            <%= amount %> <%= person.capitalize %><% if amount != 1 %>s<% end %><br/>
+            <% end %>
           </div>
           <div class="col-md-3">
             <h2>Timeline</h2>
             <%= @message %>
           </div>
           <div class="col-md-3">
-            <h2>Security Breaches</h2><br/>
+            <h2>Security Breaches</h2>
             <%= @match.challenger.user_name %>: <%= @match.challenger_strikes %><br/>
             <%= @match.challenged.user_name %>: <%= @match.challenged_strikes %><br/><br/>
           </div>

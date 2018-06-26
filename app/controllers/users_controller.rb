@@ -4,7 +4,8 @@ class UsersController < ApplicationController
   end
 
   def index
-    @users = User.all
+    users_unsorted = User.all
+    @users = users_unsorted.sort {|x,y| y.total_team_members <=> x.total_team_members }
   end
 
   def edit

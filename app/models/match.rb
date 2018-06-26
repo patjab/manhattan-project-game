@@ -1,3 +1,6 @@
+# The match class will contain only methods relating to match administration,
+# including determining the identity of the players
+
 class Match < ApplicationRecord
   belongs_to :challenger, class_name: 'User'
   belongs_to :challenged, class_name: 'User'
@@ -5,15 +8,20 @@ class Match < ApplicationRecord
   has_many :questions, through: :challengers
   has_many :people, through: :questions
 
-  # Roll the dice
   def choose_first_user
-    users = [self.challenger, self.challenged]
-    self.current_turn_user_id = users[rand(0..1)].id
-    self.save
+    self.update(current_turn_user_id: [self.challenger, self.challenged][rand(0..1)].id)
   end
 
   def the_other_user(user)
     self.challenger == user ? self.challenged : self.challenger
+  end
+
+  def winner_of_match
+    self.challenger.total_team_members(self) > 15 ? self.challenger : (self.challenged.total_team_members(self) > 15 ? self.challenged : nil)
+  end
+
+  def loser_of_match
+    self.winner_of_match ? self.the_other_user(winner_of_match) : nil
   end
 
   def is_challenger?(user)
@@ -24,29 +32,24 @@ class Match < ApplicationRecord
     user == self.challenged
   end
 
-  def team_count(current_user)
-    team = Hash.new
-    team["mathematician"] = current_user.user_questions.where(match_id: self.id).select {|uq| uq.question.person.name == "Mathematician"}.count
-    team["physicist"] = current_user.user_questions.where(match_id: self.id).select {|uq| uq.question.person.name == "Physicist"}.count
-    team["chemist"] = current_user.user_questions.where(match_id: self.id).select {|uq| uq.question.person.name == "Chemist"}.count
-    team["politician"] = current_user.user_questions.where(match_id: self.id).select {|uq| uq.question.person.name == "Politician"}.count
-    team
+  def find_or_generate_random_question(user)
+    (self.current_question_id && Question.find(self.current_question_id)) || Question.random_question(user)
   end
 
-  def total_num_of_team_players(current_user)
-    current_user.user_questions.where(match_id: self.id).count
-    # or Match.find(2).team_count(User.find(11)).reduce(0) {|sum,(key,value)| sum + value}
+  def espionage_ability?(user)
+    (self.is_challenger?(user) && self.challenged_strikes > 2) || (self.is_challenged?(user) && self.challenger_strikes > 2)
   end
 
-  def find_or_generate_random_question(current_user)
-    (self.current_question_id && Question.find(self.current_question_id)) || Question.random_question(current_user)
+  def espionage_on_you?(user)
+    (self.is_challenger?(user) && self.espionage_on_challenger) || (self.is_challenged?(user) && self.espionage_on_challenged)
   end
 
-  def espionage_ability?(current_user)
-    (self.is_challenger?(current_user) && self.challenged_strikes > 2) || (self.is_challenged?(current_user) && self.challenger_strikes > 2)
+  def add_strike(user)
+    (self.is_challenger?(user) && self.challenger_strikes += 1) || (self.is_challenged?(user) && self.challenged_strikes += 1)
+    self.save
   end
 
-  def espionage_on_you?(current_user)
-    (self.is_challenger?(current_user) && self.espionage_on_challenger) || (self.is_challenged?(current_user) && self.espionage_on_challenged)
+  def espionage_over(user)
+    self.is_challenger?(user) ? self.update(challenger_strikes: 0, espionage_on_challenger: false) : self.update(challenged_strikes: 0, espionage_on_challenged: false)
   end
 end
