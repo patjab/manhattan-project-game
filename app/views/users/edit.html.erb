@@ -7,3 +7,19 @@
 <%= f.text_field :nation_name %><br/><br/>
 <%= f.submit %><br/>
 <% end %>
+<br/><br/>
+
+<h1>Change Password</h1>
+<%= form_for @user do |f| %>
+
+<b><%= f.label :current_password %></b><br/>
+<%= f.password_field :current_password %><br/><br/>
+<b><%= f.label :password %></b><br/>
+<%= f.password_field :password %><br/><br/>
+<b><%= f.label :password_confirmation %></b><br/>
+<%= f.password_field :password_confirmation %><br/><br/>
+<%= f.submit "Change Password" %><br/>
+<% end %>
+
+<br/>
+<span class="message"><%= @message %></span>

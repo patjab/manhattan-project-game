@@ -46,6 +46,34 @@ class User < ApplicationRecord
     question.correct_response?(response)
   end
 
+  def random_challengers(repeat_users, limit = nil)
+    potential_challengeds = repeat_users ? (User.all - [self]) : (User.all - [self] - self.challengeds - self.challengers)
+    limit.nil? ? (limit = potential_challengeds.length) : nil
+    display_potential_challengeds = []
+    while potential_challengeds.length > 0 && display_potential_challengeds.length < limit
+      random_i = rand(potential_challengeds.length)
+      display_potential_challengeds << potential_challengeds[random_i]
+      potential_challengeds.delete_at(random_i)
+    end
+    display_potential_challengeds
+  end
+
+  def all_matches
+    (self.challenger_matches + self.challenged_matches).sort { |x,y| y.created_at <=> x.created_at }
+  end
+
+  def active_matches
+    all_matches.select { |match| match.accepted }
+  end
+
+  def pending_matches
+    all_matches.select { |match| !match.accepted }
+  end
+
+  def has_pending_matches?
+    self.pending_matches.count != 0
+  end
+
   private
   def process_correct_response(match, question)
     self.award_the_question(match, question)

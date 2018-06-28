@@ -43,6 +43,59 @@ table {
   color: #FF0000;
 }
 
+.message {
+  color: #FF0000;
+}
+
+.notCentered {
+  text-align: left;
+}
+
+.userIndicator {
+  text-align: right;
+  font-weight: bold;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.nationPreviewInfo {
+  padding: 5px;
+}
+
+.username {
+  font-size: 18px;
+}
+
+.nationname {
+  font-size: 14px;
+}
+
+.datetime {
+  font-size: 10px;
+}
+
+table {
+  margin: 5pt;
+  border: 3px solid white;
+}
+
+input[type=submit] {
+    background-color: #000000;
+    border: none;
+    color: white;
+    padding: 10px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+input[type=submit]:disabled {
+    background-color: #CCCCCC;
+}
+
 /* Style the links inside the navigation bar */
 .topnav a {
     float: left;

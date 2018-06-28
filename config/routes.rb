@@ -25,4 +25,7 @@ Rails.application.routes.draw do
   get 'rules', to: 'static#rules', as: 'rules'
 
   post 'espionage', to: 'matches#espionage_on', as: 'espionage'
+
+  get 'pending', to: 'matches#pending', as: 'pending'
+  post 'decide', to: 'matches#decide_to_accept', as: 'decide_to_accept'
 end

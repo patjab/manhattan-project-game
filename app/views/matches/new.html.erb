@@ -11,10 +11,10 @@
 <br/>
 
 <h2>Nations Waiting for a Challenge</h2>
-<% if @potential_match_users.count < 1 %>
+<% if @display_potential_challengeds.count < 1 %>
 Sorry, all nations are busy at the moment. Please try again later.<br/>
 <% else %>
-<% @potential_match_users.each do |user| %>
+<% @display_potential_challengeds.each do |user| %>
   <%= form_for @match do |f| %>
     <%= f.hidden_field :challenged, :value => user.user_name %><br/>
     <%= f.submit "Challenge #{user.user_name}" %><br/>

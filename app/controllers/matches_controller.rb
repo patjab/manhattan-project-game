@@ -1,19 +1,34 @@
 class MatchesController < ApplicationController
   before_action :authorized
-  before_action :preserve_turn_statefulness, only: [:show, :evaluate, :espionage_on]
+  before_action :preserve_turn_statefulness, only: [:show, :evaluate, :espionage_on, :pending, :decide_to_accept]
 
   def new
     @match = Match.new
-    @potential_match_users = (User.all - current_user.challengeds - current_user.challengers - [current_user])
+    @display_potential_challengeds = current_user.random_challengers(true, 5)
   end
 
   def index
-    @challengeds = current_user.challengeds
-    @challengers = current_user.challengers
-    @potential_match_users = User.all - @challengeds - @challengers - [current_user]
+    @message = params[:message]
+    @active_matches = current_user.active_matches
+    @pending_matches = current_user.pending_matches
+  end
+
+  def pending
+    @match.accepted ? redirect_to(matches_path) : nil
+  end
+
+  def decide_to_accept
+    if params[:accepted] == "true"
+      @match.update(accepted: true)
+      redirect_to match_path(@match)
+    else
+      @match.destroy
+      redirect_to matches_path
+    end
   end
 
   def show
+    !@match.accepted ? redirect_to(pending_path(id: params[:id])) : nil
     current_user != @match.challenger && current_user != @match.challenged ? redirect_to(matches_path) : nil
     @match.winner_of_match ? (render :'finished.html') : nil
     @team = current_user.team_roaster(@match)
@@ -32,10 +47,10 @@ class MatchesController < ApplicationController
 
   def create
     @match = Match.new
-    potential_match_users = User.all - current_user.challengeds - current_user.challengers - [current_user]
+    @display_potential_challengeds = current_user.random_challengers(true, 5)
     challenged = User.find_by(user_name: params[:match][:challenged])
-    if !challenged.nil? && potential_match_users.include?(challenged)
-      created_match = Match.create(challenger: current_user, challenged: challenged)
+    if !challenged.nil? && current_user.random_challengers(true).include?(challenged)
+      created_match = Match.create(challenger: current_user, challenged: challenged, accepted: false)
       created_match.choose_first_user
       redirect_to matches_path
     else

@@ -14,16 +14,18 @@
   <body>
 
 <div class="topnav">
-
       <% if logged_in? %>
-
-      <%= link_to "Mission Control", matches_path %> |
-      <%= link_to "Rename Nation", edit_user_path(current_user) %> |
+        <% if current_user.has_pending_matches? %>
+          <%= link_to "Mission Control (#{current_user.pending_matches.count})", matches_path %>
+        <% else %>
+          <%= link_to "Mission Control", matches_path %>
+        <% end %>
+      <%= link_to "Change Profile", edit_user_path(current_user) %>
       <% else %>
-      <%= link_to 'Login', login_path %> |
-      <%= link_to 'Sign Up', signup_path %> |
+      <%= link_to 'Login', login_path %>
+      <%= link_to 'Sign Up', signup_path %>
       <% end %>
-      <%= link_to "Rules", rules_path %> |
+      <%= link_to "Rules", rules_path %>
       <%= link_to "Rankings", users_path %>
 </div>
 

@@ -1,13 +1,54 @@
 <%= image_tag("rocket.png", :size => "250x200") %>
 <h1>Mission Control for <%= current_user.nation_name %> (<%= current_user.user_name %>)</h1>
+<% if @message %>
+<span class="message"><h3><%= @message %></h3></span>
+<% end %>
+
+<% if @pending_matches.count > 0 %>
+<h3>Your Pending Races</h3>
+  <% @pending_matches.each do |match| %>
+    <% if match.challenger == current_user %>
+      <span class="username"><%= link_to match.challenged.user_name, match_path(match) %></span><br/>
+    <% else %>
+      <span class="username"><%= link_to match.challenger.user_name, match_path(match) %></span><br/>
+    <% end %>
+  <% end %>
+<% end %>
+<br/>
+
 <h3>Your Ongoing Races</h3>
-<% if @challengeds.count + @challengers.count > 0 %>
-<% @challengeds.each do |user| %>
-<%= link_to user.user_name, match_path(Match.find_by(challenger: current_user, challenged: user)) %><br/>
-<% end %>
-<% @challengers.each do |user| %>
-<%= link_to user.user_name, match_path(Match.find_by(challenger: user, challenged: current_user)) %><br/>
-<% end %>
+<% if @active_matches.count > 0 %>
+<center>
+<table>
+  <% @active_matches.each do |match| %>
+  <tr>
+    <% if match.challenger == current_user %>
+      <td class="nationPreviewInfo">
+        <span class="username"><%= link_to match.challenged.user_name, match_path(match) %></span><br/>
+        <span class="nationname"><%= match.challenged.nation_name %></span><br/>
+      </td>
+      <td class="notCentered">
+        <table>
+          <tr><td class="userIndicator">You:</td> <td class="notCentered"><% match.challenger.total_team_members(match).times do loop %>&#9608;<% end %></td></tr>
+          <tr><td class="userIndicator">Opponent:</td> <td class="notCentered"><% match.challenged.total_team_members(match).times do loop %>&#9608;<% end %></td></tr>
+        </table>
+      </td>
+    <% else %>
+      <td class="nationPreviewInfo">
+        <span class="username"><%= link_to match.challenger.user_name, match_path(match) %></span><br/>
+        <span class="nationname"><%= match.challenger.nation_name %></span><br/>
+      </td>
+      <td class="notCentered">
+        <table>
+          <tr><td class="userIndicator">You:</td> <td class="notCentered"><% match.challenged.total_team_members(match).times do loop %>&#9608;<% end %></td></tr>
+          <tr><td class="userIndicator">Opponent:</td> <td class="notCentered"><% match.challenger.total_team_members(match).times do loop %>&#9608;<% end %></td></tr>
+        </table>
+      </td>
+    <% end %>
+  </tr>
+  <% end %>
+</table>
+</center>
 <% else %>
 You have no ongoing matches.
 <% end %>
