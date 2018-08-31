@@ -4,6 +4,8 @@ Rails.application.routes.draw do
 
   resources :matches, only: [:index, :new, :create]
 
+  get 'show_json/:id', to: 'matches#show_json', as: 'show_match_json'
+
   get 'signup', to: 'users#new', as: 'signup'
   get 'users/', to: 'users#index', as: 'users'
   get 'users/:id/edit', to: 'users#edit', as: 'edit_user'

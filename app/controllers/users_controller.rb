@@ -25,14 +25,18 @@ class UsersController < ApplicationController
 
   def update
     @user = current_user
-    if params[:user][:nation_name]
-      @user.update(nation_name: params[:user][:nation_name].capitalize)
-      redirect_to matches_path(id: @user.id, message: "Your nation name was successfully changed.")
+
+    if params[:user][:user_name] || params[:user][:nation_name]
+      @user.update(user_name: params[:user][:user_name], nation_name: params[:user][:nation_name].capitalize)
+      redirect_to matches_path(id: @user.id, message: "Your name was successfully changed.")
     elsif params[:user][:password] && @user.authenticate(params[:user][:current_password])
       @user.update(password: params[:user][:password], password_confirmation: params[:user][:password_confirmation])
       redirect_to matches_path(id: @user.id, message: "Your changes were successfully saved.")
     elsif params[:user][:password] && !@user.authenticate(params[:current_password])
       @message = "That password was incorrect. Please try again."
+      render :'edit.html'
+    else
+      @message = "You must submit a change."
       render :'edit.html'
     end
   end

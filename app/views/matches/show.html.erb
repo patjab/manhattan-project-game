@@ -54,29 +54,29 @@
         <% if @espionage_on_opponent %><span class="err_msgs"><h2>Your spy is attempting to poach from your opponent's team.</h2></span><% end %>
 
         <% if current_user.id == @match.current_turn_user_id %>
-        <h2>Question:</h2><br/>
-        The <%= @question.person.name %> asks:<br/>
+          <h2>Question:</h2><br/>
+          The <%= @question.person.name %> asks:<br/>
 
-        <%= @question.question %><br/>
-          <%= form_tag "/matches/#{@match.id}" do %>
-            <% @question.hash_of_options.each do |option, answer| %>
-              <%= radio_button_tag(:'question[option]', "#{option}") %> <%= option %><br/>
-            <% end %><br/>
-            <%= submit_tag 'Answer' %><br/><br/>
-            <br/>
-          <% end %>
+          <%= @question.question %><br/>
+            <%= form_tag "/matches/#{@match.id}" do %>
+              <% @question.hash_of_options.each do |option, answer| %>
+                <%= radio_button_tag(:'question[option]', "#{option}") %> <%= option %><br/>
+              <% end %><br/>
+              <%= submit_tag 'Answer' %><br/><br/>
+              <br/>
+            <% end %>
         <% else %>
 
-        <% if @correctness_msg == nil %>
+          <% if @correctness_msg == nil %>
+            <br/>
+          <% elsif @correctness_msg == true %>
+            <span class="correct"><h2><b>Congratulations. A <%=@question.person.name.downcase%> just joined your team!</b></h2></span>
+          <% elsif @correctness_msg == false %>
+            <span class="incorrect"><h2><b>Wrong! The <%=@question.person.name.downcase%> didn't join your team.</b></h2></span>
+          <% end %>
           <br/>
-        <% elsif @correctness_msg == true %>
-          <span class="correct"><h2><b>Congratulations. A <%=@question.person.name.downcase%> just joined your team!</b></h2></span>
-        <% elsif @correctness_msg == false %>
-          <span class="incorrect"><h2><b>Wrong! The <%=@question.person.name.downcase%> didn't join your team.</b></h2></span>
-        <% end %>
-        <br/>
-        Wait for your opponent.<br/><br/>
-        <%= link_to "Refresh", match_path(@match) %><br/><br/><br/>
+          Wait for your opponent.<br/><br/>
+          <%= link_to "Refresh", match_path(@match) %><br/><br/><br/>
         <% end %>
 
 </div>
